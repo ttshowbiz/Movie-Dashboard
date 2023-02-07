@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "trakt.tv": "^8.1.1"
+  }
+}
