@@ -10,6 +10,7 @@ class Movies {
             }
             
             const trakt_info = JSON.parse(jsonString)
+            this.userId = trakt_info.user_id
             this.init(trakt_info.client_id, trakt_info.client_secret)
         })
     }
@@ -26,8 +27,10 @@ class Movies {
         this.trakt = new Trakt(options);
     }
 
-    get_now_playing() {
-        this.trakt.movies.watching()
+    async get_now_playing() {
+        let now_watching = await this.trakt.users.watching({ username: this.userId })
+        // TODO: handle no now playing, handle now playing movie
+        return now_watching.data.show.title + ": " + now_watching.data.episode.title
     }
 }
 

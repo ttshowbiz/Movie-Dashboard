@@ -8,13 +8,13 @@
     <script>
       var socket = io();
         socket.on('connect', function (data) {
-            socket.emit('join', 'Hello World from client');
+            socket.emit('join');
         });
         socket.on('now_playing', function (data) {
-            alert(data);
+            document.getElementById("now_playing").innerHTML = data
         });
     </script>
     <h1>Now Playing</h1>
-    <dir name="now_playing"></dir>
+    <dir><h2 id="now_playing"></h2></dir>
   </body>
 </html>

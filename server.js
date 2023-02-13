@@ -26,9 +26,11 @@ var movies = new Movies(__dirname + '/trakt_info.json')
 io.on('connection', function (client) {
     console.log('Client connected...');
 
-    client.on('join', function (data) {
-        console.log(data);
-        client.emit('now_playing', "TEST: " + movies.get_now_playing());
+    client.on('join', function () {
+        movies.get_now_playing().then(data => {
+            client.emit('now_playing', data);
+        })
+        
     });
 
 });
