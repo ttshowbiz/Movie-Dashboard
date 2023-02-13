@@ -29,8 +29,14 @@ class Movies {
 
     async get_now_playing() {
         let now_watching = await this.trakt.users.watching({ username: this.userId })
-        // TODO: handle no now playing, handle now playing movie
-        return now_watching.data.show.title + ": " + now_watching.data.episode.title
+        
+        if (now_watching.data)
+            if (now_watching.data.movie)
+                return now_watching.data.movie.title
+            else if (now_watching.data.show)
+                return now_watching.data.show.title + ": " + now_watching.data.episode.title
+        else
+            return "Nothing Currently Playing"
     }
 }
 

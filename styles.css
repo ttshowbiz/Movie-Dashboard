@@ -1,8 +1,18 @@
 body {
   font-family:Verdana;
   background-color:#1b1a1a;
-  color: #e08a0a
+  color: #b4b1b1
 }
+fieldset {
+    border-top: 2px solid #333;
+    border-bottom: hidden;
+    border-left: hidden;
+    border-right: hidden
+}
+
 h2 {
+    color: #ff0000
+}
+h3 {
     color: #808080
 }

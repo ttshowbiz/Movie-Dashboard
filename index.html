@@ -3,6 +3,7 @@
   <head>
     <link rel="stylesheet" href="/styles.css">
     <script src="/socket.io/socket.io.js"></script>
+    <title>Movie Dashboard</title>
   </head>
   <body>
     <script>
@@ -14,7 +15,11 @@
             document.getElementById("now_playing").innerHTML = data
         });
     </script>
-    <h1>Now Playing</h1>
-    <dir><h2 id="now_playing"></h2></dir>
+    <div>
+         <fieldset>
+            <legend>Now Playing</legend>
+            <h3 id="now_playing"/>
+          </fieldset>
+    </div>
   </body>
 </html>
