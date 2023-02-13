@@ -30,6 +30,11 @@ io.on('connection', function (client) {
         movies.get_now_playing().then(data => {
             client.emit('now_playing', data);
         })
+        setInterval(() => {
+            movies.get_now_playing().then(data => {
+                client.emit('now_playing', data);
+            })
+        }, 5000)
         
     });
 
