@@ -7,9 +7,12 @@
   <body>
     <script>
       var socket = io();
-      $(document).ready(function() {
-        socket.emit('load');
-      });
+        socket.on('connect', function (data) {
+            socket.emit('join', 'Hello World from client');
+        });
+        socket.on('now_playing', function (data) {
+            alert(data);
+        });
     </script>
     <h1>Now Playing</h1>
     <dir name="now_playing"></dir>
