@@ -50,6 +50,7 @@ class TraktWrapper {
                     link = `https://www.themoviedb.org/movie/${id}-${title.replace(/ /g, '-')}`
 
                     this.tmdb.get_movie_poster(client, id)
+                    this.tmdb.get_movie_genres(client, id)
                 }
                 else if (now_watching.data.show) {
                     var show_data = now_watching.data.show

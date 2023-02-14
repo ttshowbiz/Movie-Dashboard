@@ -36,6 +36,12 @@ class TmdbWrapper {
         })
     }
 
+    async get_movie_genres(client, id) {
+        this.tmdb.movieInfo({ id: id }, (err, res) => {
+            client.emit("now_playing_genres", res.genres)
+        })
+    }
+
     async get_show_genres(client, id) {
         this.tmdb.tvInfo({ id: id }, (err, res) => {
             client.emit("now_playing_genres", res.genres)
