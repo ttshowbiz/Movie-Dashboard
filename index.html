@@ -7,7 +7,7 @@
   </head>
   <body>
     <script>
-      var socket = io();
+        var socket = io();
         socket.on('connect', function (data) {
             socket.emit('join');
         });
@@ -42,7 +42,7 @@
         })
     </script>
     <div>
-         <fieldset>
+        <fieldset>
             <legend>Now Playing</legend>
             <div>
                 <a id="now_playing_link" href="">
@@ -54,7 +54,13 @@
                     <div id="genre_container"></div>
                 </div>
             </div>
-          </fieldset>
+         </fieldset>
+         <fieldset>
+            <legend>Watch History</legend>
+            <div>
+            </div>
+        </fieldset>
     </div>
   </body>
 </html>
+<!--http://image.tmdb.org/t/p/w154/3wAsfLbGVa3Nb1zBzdOUwttxtjZ.jpg-->
