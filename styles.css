@@ -14,3 +14,8 @@ fieldset {
 h3 {
     color: #808080
 }
+
+.child {
+    float: left;
+    padding: 5px 15px; /* top/bottom left/right */
+}

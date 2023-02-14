@@ -11,14 +11,25 @@
         socket.on('connect', function (data) {
             socket.emit('join');
         });
-        socket.on('now_playing', function (data) {
-            document.getElementById("now_playing").innerHTML = data
-        });
+        socket.on('now_playing_title', function(title) {
+            document.getElementById("now_playing_title").innerHTML=title;
+            if(title == "Nothing Currently Playing")
+                document.getElementById("now_playing_poster").alt = ""
+            else
+                document.getElementById("now_playing_poster").alt = title + " Poster"
+        })
+        socket.on('now_playing_poster', function(poster) {
+            console.log('test: ' + poster);
+            document.getElementById("now_playing_poster").src=poster;
+        })
     </script>
     <div>
          <fieldset>
             <legend>Now Playing</legend>
-            <h3 id="now_playing"/>
+            <div>
+                <img class="child" id="now_playing_poster"/>
+                <h3 class="child" id="now_playing_title"></h3>
+            </div>
           </fieldset>
     </div>
   </body>
