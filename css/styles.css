@@ -30,18 +30,20 @@ legend {
     font-size: 1em;
 }
 
-img {
+.poster {
     border-radius: 20px;
     border: solid 5px transparent;
-    margin-left: 15px;
 }
 
-img:hover {
+.poster:hover {
     border: solid 5px #dad8d8;
 }
 
-.now-playing-info {
-    padding: 5px 15px; /* top/bottom left/right */
+#now-playing-info {
+    padding: 0px 15px; /* top/bottom left/right */
+}
+#now_playing_poster {
+    margin-left: 10px;
 }
 
 h3 {
@@ -73,24 +75,10 @@ h6 {
     left: 10px;
 }
 
-#watch-history-previous {
+#watch-history-next {
     right: 10px;
 }
 
-.arrow {
-    border: solid white;
-    border-width: 0 5px 5px 0;
-    cursor: pointer;
-    padding: 10px;
-    position: fixed;
-}
-
-.right {
-    -webkit-transform: rotate(-45deg);
-    transform: rotate(-45deg);
-}
-
-.left {
-    -webkit-transform: rotate(135deg);
-    transform: rotate(135deg);
+.row {
+    width: 100%;
 }

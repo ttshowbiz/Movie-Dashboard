@@ -8,17 +8,25 @@ const app = express()
 const server = http.createServer(app)
 const io = new Server(server)
 
-app.get('/', (req, res) => {
+app.get('/', (_, res) => {
     res.sendFile(get_full_path('/index.html'))
-});
+})
 
-app.get('/css/styles.css', (req, res) => {
+app.get('/assets/arrow-left.png', (_, res) => {
+    res.sendFile(get_full_path('/assets/arrow-left.png'))
+})
+
+app.get('/assets/arrow-right.png', (_, res) => {
+    res.sendFile(get_full_path('/assets/arrow-right.png'))
+})
+
+app.get('/css/styles.css', (_, res) => {
     res.sendFile(get_full_path('/css/styles.css'))
 })
 
 server.listen(3000, () => {
   console.log('listening on *:3000');
-});
+})
 
 
 const trakt = new TraktWrapper(get_full_path('/trakt_info.json'), io)

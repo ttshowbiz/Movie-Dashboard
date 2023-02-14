@@ -110,6 +110,7 @@
 
                     var poster = document.createElement("img")
                     poster.classList.add("img-fluid")
+                    poster.classList.add("poster")
                     poster.src = movie.poster
                     poster.alt = movie.name
 
@@ -129,9 +130,9 @@
             <legend>Now Playing</legend>
             <div>
                 <a id="now_playing_link" href="">
-                    <img class="child" id="now_playing_poster"></img>
+                    <img class="child poster" id="now_playing_poster"></img>
                 </a>
-                <div class="child now-playing-info">
+                <div id="now-playing-info" class="child">
                     <h3 id="now_playing_title"> </h2>
                     <h4 id="now_playing_subtitle"></h3>
                     <div id="genre_container"></div>
@@ -151,10 +152,10 @@
                 <div id="button-row" class="row">
                     <div class="col-12">
                         <a id="watch-history-previous" class="col-1 mb3 float-left" title="watch history previous" href="#carouselExampleIndicators2" role="button" data-slide="prev">
-                            <i id='icon_left' class='arrow left'></i>
+                            <img src="/assets/arrow-left.png" title="Previous"></img>
                         </a>
                         <a id="watch-history-next" class="col-1 mb3 float-right" title="watch history next" href="#carouselExampleIndicators2" role="button" data-slide="next">
-                            <i id='icon_right' class='arrow right'></i>
+                            <img src="/assets/arrow-right.png" title="Next"></img>
                         </a>
                     </div>
                 </div>
@@ -167,3 +168,4 @@
     </div>
   </body>
 </html>
+<!--http://image.tmdb.org/t/p/w154/3wAsfLbGVa3Nb1zBzdOUwttxtjZ.jpg-->
