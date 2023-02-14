@@ -1,11 +1,60 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="styles.css">
-    </head>
-    <body>
-        <h2>Setting the Viewport</h2>
-        <p>This example does not really do anything, other than showing you how to add the viewport meta element.</p>
-    </body>
+<html lang="en-US">
+  <head>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <title>Movie Dashboard</title>
+  </head>
+  <body>
+    <script>
+      var socket = io();
+        socket.on('connect', function (data) {
+            socket.emit('join');
+        });
+        socket.on('now_playing_info', function(data) {
+            document.getElementById("now_playing_title").innerHTML=data.title;
+
+            document.getElementById("now_playing_subtitle").innerHTML=data.subtitle;
+
+            if(data.title == "Nothing Currently Playing")
+                document.getElementById("now_playing_poster").alt = ""
+            else
+                document.getElementById("now_playing_poster").alt = data + " Poster"
+        })
+        socket.on('now_playing_poster', function(poster) {
+            document.getElementById("now_playing_poster").src=poster;
+        })
+        socket.on('now_playing_link', function(tmdb_link) {
+            document.getElementById("now_playing_link").href=tmdb_link
+        })
+        socket.on('now_playing_genres', function(genres) {
+            var genre_container = document.getElementById("genre_container")
+            while (genre_container.hasChildNodes()) {
+                genre_container.removeChild(genre_container.lastChild);
+            }
+
+            genres.forEach(function(genre){
+                var tag = document.createElement("h6")
+                var text = document.createTextNode(genre.name)
+                tag.appendChild(text)
+                genre_container.appendChild(tag)
+            })
+        })
+    </script>
+    <div>
+         <fieldset>
+            <legend>Now Playing</legend>
+            <div>
+                <a id="now_playing_link" href="">
+                    <img class="child" id="now_playing_poster"></img>
+                </a>
+                <div class="child now-playing-info">
+                    <h2 id="now_playing_title"> </h2>
+                    <h3 id="now_playing_subtitle"></h3>
+                    <div id="genre_container"></div>
+                </div>
+            </div>
+          </fieldset>
+    </div>
+  </body>
 </html>

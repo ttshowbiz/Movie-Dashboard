@@ -1,0 +1,19 @@
+{
+  "name": "movie-dashboard",
+  "version": "1.0.0",
+  "description": "Dashboard for movie data pulled from Trakt",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "moviedb": "^0.2.12",
+    "path.js": "^1.0.7",
+    "socket.io": "^4.6.0",
+    "trakt.tv": "^8.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^18.13.0"
+  }
+}
