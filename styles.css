@@ -1,21 +1,49 @@
 body {
-  font-family:Verdana;
-  background-color:#1b1a1a;
-  color: #b4b1b1
+    font-family: Verdana;
+    background-color: #14181c;
+    color: #97a8b9;
 }
 
 fieldset {
-    border-top: 2px solid #333;
+    border-top: 2px solid #97a8b9;
     border-bottom: hidden;
     border-left: hidden;
     border-right: hidden
 }
 
+img {
+    border-radius: 20px;
+    border: solid 5px transparent;
+}
+
+img:hover {
+    border: solid 5px #dad8d8;
+}
+
+.now-playing-info {
+    padding: 5px 15px; /* top/bottom left/right */
+}
+
+h2 {
+    color: #e5e9eb;
+    margin: 5px;
+}
+
 h3 {
-    color: #808080
+    color: #97a8b9;
+    margin: 5px;
+}
+
+h6 {
+    border: solid 2px #40bcf4;
+    border-radius: 10px;
+    color: #40bcf4;
+    float: left;
+    margin: 5px;
+    padding: 5px;
+    width: fit-content;
 }
 
 .child {
     float: left;
-    padding: 5px 15px; /* top/bottom left/right */
 }

@@ -24,7 +24,6 @@ class TmdbWrapper {
 
     async get_movie_poster(client, id) {
         this.tmdb.movieImages({ id: id}, (err, res) => {
-            //console.log(res)
             var poster_path = this.base_url + this.poster_size + res.posters[0].file_path
             client.emit("now_playing_poster", poster_path)
         })
@@ -32,9 +31,14 @@ class TmdbWrapper {
 
     async get_show_poster(client, id, season) {
         this.tmdb.tvSeasonImages({ id: id, season_number: season}, (err, res) => { 
-            //console.log(res)
             var poster_path = this.base_url + this.poster_size + res.posters[0].file_path
             client.emit("now_playing_poster", poster_path)
+        })
+    }
+
+    async get_show_genres(client, id) {
+        this.tmdb.tvInfo({ id: id }, (err, res) => {
+            client.emit("now_playing_genres", res.genres)
         })
     }
 }
