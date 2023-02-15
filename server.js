@@ -16,8 +16,8 @@ app.get('/css/styles.css', (req, res) => {
     res.sendFile(get_full_path('/css/styles.css'))
 })
 
-app.get('/css/flexbox.css', (req, res) => {
-    res.sendFile(get_full_path('/css/flexbox.css'))
+app.get('/css/carousel.css', (req, res) => {
+    res.sendFile(get_full_path('/css/carousel.css'))
 })
 
 server.listen(3000, () => {

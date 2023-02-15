@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en-US">
   <head>
-    <link rel="stylesheet" href="/css/flexbox.css">
+    <link rel="stylesheet" href="/css/carousel.css">
     <link rel="stylesheet" href="/css/styles.css">
     <script src="/socket.io/socket.io.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <title>Movie Dashboard</title>
   </head>
   <body>
@@ -41,20 +42,44 @@
                 })
         })
         socket.on('watch_history', function(movies) {
-            var watch_history = document.getElementById("watch_history")
+            var watch_history = document.getElementById("watch-history")
             while (watch_history.hasChildNodes()) {
                 watch_history.removeChild(watch_history.lastChild);
             }
 
             if(movies)
             {
+                let count = 0
                 movies.forEach(function(movie){
                     var tag = document.createElement("img")
+                    tag.classList.add("carousel-image")
+                    if(count > 7)
+                        tag.classList.add("hidden")
+
                     tag.src = movie.poster
+                    tag.alt = movie.name
                     watch_history.appendChild(tag)
+                    count++
                 })
             }
-        })
+        })        
+
+        $(document).ready(function(){
+            $('.carousel-image').hover(function() {
+                $(this).addClass('transition')
+    
+            }, function() {
+                $(this).removeClass('transition')
+            });
+        });
+
+        $(document).on('click', '#icon_right, #icon_left', function() {
+            if($(this).attr('id') == 'icon_right') {
+                $('.inner-carousel').animate({scrollLeft: 1000}, 800);
+                } else {
+                $('.inner-carousel').animate({scrollLeft: -1000}, 800);
+            }
+        });
     </script>
     <div>
         <fieldset>
@@ -72,10 +97,12 @@
          </fieldset>
          <fieldset>
             <legend>Watch History</legend>
-            <div id="watch_history" class="flex-container">
+            <div class="outer-carousel">
+                <i id='icon_left' class='arrow left'></i>
+                <div id="watch-history" class="inner-carousel"></div>
+                <i id='icon_right' class='arrow right'></i>
             </div>
         </fieldset>
     </div>
   </body>
 </html>
-<!--http://image.tmdb.org/t/p/w154/3wAsfLbGVa3Nb1zBzdOUwttxtjZ.jpg-->
