@@ -78,10 +78,10 @@ class TraktWrapper {
     // NOTE: Movies only
     async get_watch_history(client, force_send=false) {
         this.trakt.users.watched({ username: this.userId, type: "movies" }).then(async watch_history => {
+            let movies = []
             if (watch_history.data) {
                 watch_history.data.sort(function (a, b) {
                     return new Date(b.last_watched_at) - new Date(a.last_watched_at)
-                })
 
                 this.get_movie_data(watch_history.data).then(new_movie_added => {
                     if (client && (force_send || new_movie_added)) {
@@ -132,12 +132,13 @@ class TraktWrapper {
                 else {
                     poster = await this.tmdb.get_movie_poster(tmdb_id)
                 }
-
+                        poster = await this.tmdb.get_movie_poster(movie.movie.ids.tmdb)
                 this.movies.set(trakt_id, new Movie(movie.movie.title, poster, link))
             }
         }
 
         return new_movie_added
+        })
     }
 }
 
