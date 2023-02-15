@@ -12,33 +12,46 @@
             socket.emit('join');
         });
         socket.on('now_playing_info', function(data) {
+            console.log(data)
             document.getElementById("now_playing_title").innerHTML=data.title;
 
             document.getElementById("now_playing_subtitle").innerHTML=data.subtitle;
+
+            document.getElementById("now_playing_link").href=data.link
+
+            document.getElementById("now_playing_poster").src=data.poster;
 
             if(data.title == "Nothing Currently Playing")
                 document.getElementById("now_playing_poster").alt = ""
             else
                 document.getElementById("now_playing_poster").alt = data + " Poster"
-        })
-        socket.on('now_playing_poster', function(poster) {
-            document.getElementById("now_playing_poster").src=poster;
-        })
-        socket.on('now_playing_link', function(tmdb_link) {
-            document.getElementById("now_playing_link").href=tmdb_link
-        })
-        socket.on('now_playing_genres', function(genres) {
+
             var genre_container = document.getElementById("genre_container")
             while (genre_container.hasChildNodes()) {
                 genre_container.removeChild(genre_container.lastChild);
             }
 
-            genres.forEach(function(genre){
-                var tag = document.createElement("h6")
-                var text = document.createTextNode(genre.name)
-                tag.appendChild(text)
-                genre_container.appendChild(tag)
-            })
+            if(data.genres)
+                data.genres.forEach(function(genre){
+                    var tag = document.createElement("h6")
+                    var text = document.createTextNode(genre)
+                    tag.appendChild(text)
+                    genre_container.appendChild(tag)
+                })
+        })
+        socket.on('watch_history', function(movies) {
+            var watch_history = document.getElementById("watch_history")
+            while (watch_history.hasChildNodes()) {
+                watch_history.removeChild(watch_history.lastChild);
+            }
+
+            if(movies)
+                movies.forEach(function(movie){
+                    var tag = document.createElement("h6")
+                    var text = document.createTextNode(movie.name)
+                    tag.appendChild(text)
+                    watch_history.appendChild(tag)
+                })
         })
     </script>
     <div>
@@ -57,7 +70,7 @@
          </fieldset>
          <fieldset>
             <legend>Watch History</legend>
-            <div>
+            <div id="watch_history">
             </div>
         </fieldset>
     </div>

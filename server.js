@@ -29,10 +29,15 @@ io.on('connection', function (client) {
     client.on('join', function () {
 
         trakt.get_now_playing(client)
+        trakt.get_watch_history(client)
 
         setInterval(() => {
             trakt.get_now_playing(client)
         }, 5000)
+
+        setInterval(() => {
+            trakt.get_watch_history(client)
+        }, 300000)
 
     });
 });
