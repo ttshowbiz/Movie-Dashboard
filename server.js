@@ -12,8 +12,12 @@ app.get('/', (req, res) => {
     res.sendFile(get_full_path('/index.html'))
 });
 
-app.get('/styles.css', (req, res) => {
-    res.sendFile(get_full_path('/styles.css'))
+app.get('/css/styles.css', (req, res) => {
+    res.sendFile(get_full_path('/css/styles.css'))
+})
+
+app.get('/css/flexbox.css', (req, res) => {
+    res.sendFile(get_full_path('/css/flexbox.css'))
 })
 
 server.listen(3000, () => {
@@ -21,7 +25,7 @@ server.listen(3000, () => {
 });
 
 
-var trakt = new TraktWrapper(get_full_path('/trakt_info.json'), io)
+const trakt = new TraktWrapper(get_full_path('/trakt_info.json'), io)
 
 io.on('connection', function (client) {
     console.log('Client connected...');

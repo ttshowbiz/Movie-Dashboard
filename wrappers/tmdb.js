@@ -23,12 +23,13 @@ class TmdbWrapper {
     }
 
     async get_movie_poster(id) {
+        // TODO: try and verify language
         let result = await this.tmdb.movieImages({ id: id })
         return this.base_url + this.poster_size + result.posters[0].file_path
     }
 
     async get_show_poster(id, season = -1) {
-        var result
+        let result
         if(season > 0)
             result = await this.tmdb.seasonImages({ id: id, season: season })
         else
@@ -38,7 +39,7 @@ class TmdbWrapper {
     }
 
     async get_movie_genres(id) {
-        var genres = []
+        let genres = []
         let result = await this.tmdb.movieInfo({ id: id })
 
         result.genres.forEach(genre => {
@@ -49,7 +50,7 @@ class TmdbWrapper {
     }
 
     async get_show_genres(id) {
-        var genres = []
+        let genres = []
         let result = await this.tmdb.tvInfo({ id: id })
 
         result.genres.forEach(genre => {

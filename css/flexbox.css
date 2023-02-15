@@ -1,0 +1,11 @@
+.flex-container {
+    background-color: transparent;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+}
+
+.flex-container > img {
+    margin: 10px;
+}

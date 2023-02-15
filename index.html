@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en-US">
   <head>
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/css/flexbox.css">
+    <link rel="stylesheet" href="/css/styles.css">
     <script src="/socket.io/socket.io.js"></script>
     <title>Movie Dashboard</title>
   </head>
@@ -46,12 +47,13 @@
             }
 
             if(movies)
+            {
                 movies.forEach(function(movie){
-                    var tag = document.createElement("h6")
-                    var text = document.createTextNode(movie.name)
-                    tag.appendChild(text)
+                    var tag = document.createElement("img")
+                    tag.src = movie.poster
                     watch_history.appendChild(tag)
                 })
+            }
         })
     </script>
     <div>
@@ -70,7 +72,7 @@
          </fieldset>
          <fieldset>
             <legend>Watch History</legend>
-            <div id="watch_history">
+            <div id="watch_history" class="flex-container">
             </div>
         </fieldset>
     </div>
