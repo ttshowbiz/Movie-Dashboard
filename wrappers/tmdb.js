@@ -1,5 +1,5 @@
 import fs from 'fs'
-import MovieDB from 'moviedb'
+import { MovieDb } from 'moviedb-promise'
 
 class TmdbWrapper {
     constructor(info_file) {
@@ -15,37 +15,48 @@ class TmdbWrapper {
     }
 
     init(api_key) {
-        this.tmdb = new MovieDB(api_key)
-        this.tmdb.configuration({}, (err, res) => {
+        this.tmdb = new MovieDb(api_key)
+        this.tmdb.configuration({}).then((res) => {
             this.base_url = res.images.base_url
             this.poster_size = 'w154'
         })
     }
 
-    async get_movie_poster(client, id) {
-        this.tmdb.movieImages({ id: id}, (err, res) => {
-            var poster_path = this.base_url + this.poster_size + res.posters[0].file_path
-            client.emit("now_playing_poster", poster_path)
-        })
+    async get_movie_poster(id) {
+        // TODO: try and verify language
+        let result = await this.tmdb.movieImages({ id: id })
+        return this.base_url + this.poster_size + result.posters[0].file_path
     }
 
-    async get_show_poster(client, id, season) {
-        this.tmdb.tvSeasonImages({ id: id, season_number: season}, (err, res) => { 
-            var poster_path = this.base_url + this.poster_size + res.posters[0].file_path
-            client.emit("now_playing_poster", poster_path)
-        })
+    async get_show_poster(id, season = -1) {
+        let result
+        if(season > 0)
+            result = await this.tmdb.seasonImages({ id: id, season: season })
+        else
+            result = await this.tmdb.tvImages({ id: id})
+
+        return this.base_url + this.poster_size + result.posters[0].file_path
     }
 
-    async get_movie_genres(client, id) {
-        this.tmdb.movieInfo({ id: id }, (err, res) => {
-            client.emit("now_playing_genres", res.genres)
+    async get_movie_genres(id) {
+        let genres = []
+        let result = await this.tmdb.movieInfo({ id: id })
+
+        result.genres.forEach(genre => {
+            genres.push(genre.name)
         })
+        return genres
+
     }
 
-    async get_show_genres(client, id) {
-        this.tmdb.tvInfo({ id: id }, (err, res) => {
-            client.emit("now_playing_genres", res.genres)
+    async get_show_genres(id) {
+        let genres = []
+        let result = await this.tmdb.tvInfo({ id: id })
+
+        result.genres.forEach(genre => {
+            genres.push(genre.name)
         })
+        return genres
     }
 }
 

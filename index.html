@@ -1,60 +1,131 @@
 <!DOCTYPE html>
 <html lang="en-US">
   <head>
-    <link rel="stylesheet" href="/styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/carousel.css">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>     
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+        <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <title>Movie Dashboard</title>
   </head>
   <body>
     <script>
-      var socket = io();
+        var socket = io();
         socket.on('connect', function (data) {
             socket.emit('join');
         });
         socket.on('now_playing_info', function(data) {
+            console.log(data)
             document.getElementById("now_playing_title").innerHTML=data.title;
 
             document.getElementById("now_playing_subtitle").innerHTML=data.subtitle;
+
+            document.getElementById("now_playing_link").href=data.link
+
+            document.getElementById("now_playing_poster").src=data.poster;
 
             if(data.title == "Nothing Currently Playing")
                 document.getElementById("now_playing_poster").alt = ""
             else
                 document.getElementById("now_playing_poster").alt = data + " Poster"
-        })
-        socket.on('now_playing_poster', function(poster) {
-            document.getElementById("now_playing_poster").src=poster;
-        })
-        socket.on('now_playing_link', function(tmdb_link) {
-            document.getElementById("now_playing_link").href=tmdb_link
-        })
-        socket.on('now_playing_genres', function(genres) {
+
             var genre_container = document.getElementById("genre_container")
             while (genre_container.hasChildNodes()) {
                 genre_container.removeChild(genre_container.lastChild);
             }
 
-            genres.forEach(function(genre){
-                var tag = document.createElement("h6")
-                var text = document.createTextNode(genre.name)
-                tag.appendChild(text)
-                genre_container.appendChild(tag)
-            })
+            if(data.genres)
+                data.genres.forEach(function(genre){
+                    var tag = document.createElement("h6")
+                    var text = document.createTextNode(genre)
+                    tag.appendChild(text)
+                    genre_container.appendChild(tag)
+                })
         })
+        socket.on('watch_history', function(movies) {
+            var watch_history = document.getElementById("watch-history")
+
+            while (watch_history.hasChildNodes()) 
+                watch_history.removeChild(watch_history.firstChild);
+
+            if(movies)
+            {
+                let count = 0;
+                let carousel_row
+                let inner_row
+                movies.forEach(function(movie){
+                    if(count % 5 == 0) {
+                        carousel_row = document.createElement("div")
+                        carousel_row.classList.add("carousel-item")
+                        if(count == 0)
+                            carousel_row.classList.add("active")
+
+                        inner_row = document.createElement("div")
+                        inner_row.classList.add("row")
+                        inner_row.classList.add("justify-content-center")
+                    }
+                    let card_div = document.createElement("div")
+                    card_div.classList.add("col-md-2")
+                    card_div.classList.add("mb-3")
+
+                    var link = document.createElement("a")
+                    link.href = movie.link
+
+                    var poster = document.createElement("img")
+                    poster.classList.add("img-fluid")
+                    poster.src = movie.poster
+                    poster.alt = movie.name
+
+                    link.appendChild(poster)
+                    card_div.appendChild(link)
+                    inner_row.appendChild(card_div)
+                    carousel_row.appendChild(inner_row)
+                    watch_history.appendChild(carousel_row)
+
+                    count++
+                })
+            }
+        })        
     </script>
     <div>
-         <fieldset>
+        <fieldset>
             <legend>Now Playing</legend>
             <div>
                 <a id="now_playing_link" href="">
                     <img class="child" id="now_playing_poster"></img>
                 </a>
                 <div class="child now-playing-info">
-                    <h2 id="now_playing_title"> </h2>
-                    <h3 id="now_playing_subtitle"></h3>
+                    <h3 id="now_playing_title"> </h2>
+                    <h4 id="now_playing_subtitle"></h3>
                     <div id="genre_container"></div>
                 </div>
             </div>
-          </fieldset>
+         </fieldset>
+         <fieldset>
+            <legend>Watch History</legend>
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div id="carouselExampleIndicators2" class="carousel slide" data-ride="carousel" data-interval="false">
+                            <div id="watch-history" class="carousel-inner"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <a id="watch-history-previous" class="col-1 mb3 float-left" title="watch history previous" href="#carouselExampleIndicators2" role="button" data-slide="prev">
+                            <i id='icon_left' class='arrow left'></i>
+                        </a>
+                        <a id="watch-history-next" class="col-1 mb3 float-right" title="watch history next" href="#carouselExampleIndicators2" role="button" data-slide="next">
+                            <i id='icon_right' class='arrow right'></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
     </div>
   </body>
 </html>
