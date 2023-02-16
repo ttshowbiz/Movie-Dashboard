@@ -16,8 +16,13 @@ app.get('/css/styles.css', (req, res) => {
     res.sendFile(get_full_path('/css/styles.css'))
 })
 
-app.get('/css/carousel.css', (req, res) => {
-    res.sendFile(get_full_path('/css/carousel.css'))
+// TODO: Remove
+app.get('/css/temp-styles.css', (req, res) => {
+    res.sendFile(get_full_path('/css/temp-styles.css'))
+})
+
+app.get('/css/bootstrap-iso.css', (req, res) => {
+    res.sendFile(get_full_path('/css/bootstrap-iso.css'))
 })
 
 server.listen(3000, () => {

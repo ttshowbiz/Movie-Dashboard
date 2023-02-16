@@ -92,6 +92,8 @@ class TraktWrapper {
         for (var i = 0; i < watch_history.length; i++) {
             let movie = watch_history[i]
             let poster = ""
+            let tmdb_id = movie.movie.ids.tmdb
+            let link = `https://www.themoviedb.org/movie/${tmdb_id}-${movie.movie.ids.slug}`
             /* 
              * Small Axe is listed as a movie in Trakt and has a valid TMDB movie id but, the TMDB movie page 
              * associated with this id is empty. There is a TMDB page for Small Axe under TV with a different 
@@ -100,9 +102,9 @@ class TraktWrapper {
             if (movie.movie.title == "Small Axe")
                 poster = await this.tmdb.get_show_poster(90705)
             else
-                poster = await this.tmdb.get_movie_poster(movie.movie.ids.tmdb)
+                poster = await this.tmdb.get_movie_poster(tmdb_id)
 
-            movies.push({ name: movie.movie.title, poster: poster })
+            movies.push({ name: movie.movie.title, poster: poster, link: link })
         }
 
         return movies
