@@ -24,7 +24,7 @@ class TmdbWrapper {
 
     async get_movie_poster(id) {
         // TODO: try and verify language
-        let result = await this.tmdb.movieImages({ id: id })
+        let result = await this.tmdb.movieImages({ id: id, include_image_language: "en" })
         return this.base_url + this.poster_size + result.posters[0].file_path
     }
 
@@ -33,7 +33,7 @@ class TmdbWrapper {
         if(season > 0)
             result = await this.tmdb.seasonImages({ id: id, season: season })
         else
-            result = await this.tmdb.tvImages({ id: id})
+            result = await this.tmdb.tvImages({ id: id })
 
         return this.base_url + this.poster_size + result.posters[0].file_path
     }
