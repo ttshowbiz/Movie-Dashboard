@@ -45,7 +45,6 @@
                 })
         })
         socket.on('watch_history', function(movies) {
-            console.log(movies)
             var watch_history = document.getElementById("watch-history")
 
             while (watch_history.hasChildNodes()) 
@@ -56,7 +55,8 @@
                 let count = 0;
                 let carousel_row
                 let inner_row
-                movies.forEach(function(movie, trakt_id){
+                
+                movies.forEach(function(movie){
                     if(count % 5 == 0) {
                         carousel_row = document.createElement("div")
                         carousel_row.classList.add("carousel-item")

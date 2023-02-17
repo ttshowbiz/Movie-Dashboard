@@ -23,7 +23,6 @@ class TmdbWrapper {
     }
 
     async get_movie_poster(id) {
-        // TODO: try and verify language
         let result = await this.tmdb.movieImages({ id: id, include_image_language: "en" })
         return this.base_url + this.poster_size + result.posters[0].file_path
     }
