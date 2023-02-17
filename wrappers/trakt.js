@@ -76,34 +76,19 @@ class TraktWrapper {
     }
 
     // NOTE: Movies only
-    async get_watch_history(client, force_send=false) {
+    async get_watch_history(client, force_send = false) {
         this.trakt.users.watched({ username: this.userId, type: "movies" }).then(async watch_history => {
-            let movies = []
             if (watch_history.data) {
                 watch_history.data.sort(function (a, b) {
                     return new Date(b.last_watched_at) - new Date(a.last_watched_at)
+                })
 
-                    this.get_movie_data(watch_history.data).then(new_movie_added => {
-                        if (client && (force_send || new_movie_added)) {
-                            client.emit("watch_history", Array.from(this.movies.values()))
-                        }
-                    })
+                this.get_movie_data(watch_history.data).then(new_movie_added => {
+                    if (client && (force_send || new_movie_added)) {
+                        client.emit("watch_history", Array.from(this.movies.values()))
+                    }
                 })
             }
-        })
-    }
-
-    async get_movie_ratings(client) {
-        let ratings = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        this.trakt.users.ratings({ username: this.userId, type: "movies" }).then(rating_info => {
-            rating_info.data.forEach(rating => {
-                ratings[rating.rating]++
-                const TRAKT_ID = rating.movie.ids.trakt
-                if (this.movies.has(TRAKT_ID))
-                    this.movies.get(TRAKT_ID).set_rating(rating.rating)
-            })
-            
-            client.emit("ratings", ratings)
         })
     }
 
@@ -127,18 +112,32 @@ class TraktWrapper {
                  */
                 const SMALL_AXE_TRAKT_ID = 865887
                 if (movie.movie.ids.trakt == SMALL_AXE_TRAKT_ID) {
-                    const SMALL_AXE_SHOW_ID = 90705
-                    poster = await this.tmdb.get_show_poster(SMALL_AXE_SHOW_ID)
+                    const SMALL_AXE_TMDB_ID = 90705
+                    poster = await this.tmdb.get_show_poster(SMALL_AXE_TMDB_ID)
                 }
                 else {
                     poster = await this.tmdb.get_movie_poster(tmdb_id)
                 }
-                        poster = await this.tmdb.get_movie_poster(movie.movie.ids.tmdb)
+                        
                 this.movies.set(trakt_id, new Movie(movie.movie.title, poster, link))
             }
         }
 
         return new_movie_added
+    }
+
+    async get_movie_ratings(client) {
+        let ratings = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        this.trakt.users.ratings({ username: this.userId, type: "movies" }).then(rating_info => {
+            rating_info.data.forEach(rating => {
+                ratings[rating.rating]++
+                const TRAKT_ID = rating.movie.ids.trakt
+                if (this.movies.has(TRAKT_ID))
+                    this.movies.get(TRAKT_ID).set_rating(rating.rating)
+            })
+
+            client.emit("ratings", ratings)
+        })
     }
 }
 
