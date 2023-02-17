@@ -4,10 +4,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/styles.css">
-    <link rel="stylesheet" href="/css/carousel.css">
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>     
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
-        <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <title>Movie Dashboard</title>
   </head>
@@ -56,6 +55,7 @@
                 let count = 0;
                 let carousel_row
                 let inner_row
+                
                 movies.forEach(function(movie){
                     if(count % 5 == 0) {
                         carousel_row = document.createElement("div")
