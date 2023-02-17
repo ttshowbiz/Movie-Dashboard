@@ -7,6 +7,7 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>     
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
     <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <title>Movie Dashboard</title>
   </head>
@@ -43,6 +44,39 @@
                     tag.appendChild(text)
                     genre_container.appendChild(tag)
                 })
+        })
+        socket.on('ratings', function(ratings) {
+            var xValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+            
+            new Chart("ratings_chart", {
+              type: "bar",
+              data: {
+                labels: xValues,
+                datasets: [{
+                  backgroundColor: "#ff8000",
+                  data: ratings
+                }]
+              },
+              options: {
+                legend: {display: false},
+                yAxes: [{
+                    gridLines: {
+                        display: false
+                    },
+                    ticks: {
+                        display: false
+                    }
+                }],
+                xAxes: [{
+                    gridLines: {
+                        display: false
+                    },
+                    ticks: {
+                        display: false
+                    }
+                }]
+              }
+            })
         })
         socket.on('watch_history', function(movies) {
             var watch_history = document.getElementById("watch-history")
@@ -114,7 +148,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div id="button-row" class="row">
                     <div class="col-12">
                         <a id="watch-history-previous" class="col-1 mb3 float-left" title="watch history previous" href="#carouselExampleIndicators2" role="button" data-slide="prev">
                             <i id='icon_left' class='arrow left'></i>
@@ -125,6 +159,10 @@
                     </div>
                 </div>
             </div>
+        </fieldset>
+        <fieldset>
+            <legend>Ratings</legend>
+            <canvas id="ratings_chart"></canvas>
         </fieldset>
     </div>
   </body>

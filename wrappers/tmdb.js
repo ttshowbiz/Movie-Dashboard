@@ -40,7 +40,6 @@ class TmdbWrapper {
     async get_movie_genres(id) {
         let genres = []
         let result = await this.tmdb.movieInfo({ id: id })
-
         result.genres.forEach(genre => {
             genres.push(genre.name)
         })

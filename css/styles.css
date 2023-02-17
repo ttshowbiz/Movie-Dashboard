@@ -13,6 +13,15 @@ fieldset {
     margin-right: 5px;
 }
 
+canvas {
+    width: 100%;
+    max-width: 500px;
+}
+
+#button-row {
+    height: 30px;
+}
+
 legend {
     width: auto;
     padding: 0 10px;

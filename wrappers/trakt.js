@@ -46,8 +46,6 @@ class TraktWrapper {
         let genres = []
 
         this.trakt.users.watching({ username: this.userId }).then(async now_watching => {
-            //console.log(now_watching)
-
             if (now_watching.data) {
                 if (now_watching.data.movie) {
                     let movie_data = now_watching.data.movie 
@@ -78,7 +76,7 @@ class TraktWrapper {
     }
 
     // NOTE: Movies only
-    async get_watch_history(client) {
+    async get_watch_history(client, force_send=false) {
         this.trakt.users.watched({ username: this.userId, type: "movies" }).then(async watch_history => {
             if (watch_history.data) {
                 watch_history.data.sort(function (a, b) {
@@ -86,11 +84,25 @@ class TraktWrapper {
                 })
 
                 this.get_movie_data(watch_history.data).then(new_movie_added => {
-                    if (new_movie_added && client) {
+                    if (client && (force_send || new_movie_added)) {
                         client.emit("watch_history", Array.from(this.movies.values()))
                     }
                 })
             }
+        })
+    }
+
+    async get_movie_ratings(client) {
+        let ratings = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        this.trakt.users.ratings({ username: this.userId, type: "movies" }).then(rating_info => {
+            rating_info.data.forEach(rating => {
+                ratings[rating.rating]++
+                const TRAKT_ID = rating.movie.ids.trakt
+                if (this.movies.has(TRAKT_ID))
+                    this.movies.get(TRAKT_ID).set_rating(rating.rating)
+            })
+            
+            client.emit("ratings", ratings)
         })
     }
 
@@ -112,10 +124,14 @@ class TraktWrapper {
                  * associated with this id is empty. There is a TMDB page for Small Axe under TV with a different 
                  * id. This page contains the real data for this movie... sorry
                  */
-                if (movie.movie.title == "Small Axe")
-                    poster = await this.tmdb.get_show_poster(90705)
-                else
+                const SMALL_AXE_TRAKT_ID = 865887
+                if (movie.movie.ids.trakt == SMALL_AXE_TRAKT_ID) {
+                    const SMALL_AXE_SHOW_ID = 90705
+                    poster = await this.tmdb.get_show_poster(SMALL_AXE_SHOW_ID)
+                }
+                else {
                     poster = await this.tmdb.get_movie_poster(tmdb_id)
+                }
 
                 this.movies.set(trakt_id, new Movie(movie.movie.title, poster, link))
             }

@@ -16,15 +16,6 @@ app.get('/css/styles.css', (req, res) => {
     res.sendFile(get_full_path('/css/styles.css'))
 })
 
-// TODO: Remove
-app.get('/css/temp-styles.css', (req, res) => {
-    res.sendFile(get_full_path('/css/temp-styles.css'))
-})
-
-app.get('/css/bootstrap-iso.css', (req, res) => {
-    res.sendFile(get_full_path('/css/bootstrap-iso.css'))
-})
-
 server.listen(3000, () => {
   console.log('listening on *:3000');
 });
@@ -38,7 +29,8 @@ io.on('connection', function (client) {
     client.on('join', function () {
 
         trakt.get_now_playing(client)
-        trakt.get_watch_history(client)
+        trakt.get_watch_history(client, true)
+        trakt.get_movie_ratings(client)
 
         setInterval(() => {
             trakt.get_now_playing(client)
@@ -46,6 +38,7 @@ io.on('connection', function (client) {
 
         setInterval(() => {
             trakt.get_watch_history(client)
+            trakt.get_movie_ratings(client)
         }, 300000)
 
     });
