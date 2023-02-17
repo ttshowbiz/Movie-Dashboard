@@ -7,7 +7,8 @@ he root directory and include information as follows.
 trakt_info.json:
 {
 	"client_id": <trakt_client_id>,
-	"client_secret": <trakt_client_secret>
+	"client_secret": <trakt_client_secret>,
+	"user_id": <trakt_user_id>
 }
 
 tmdb_info.json:
