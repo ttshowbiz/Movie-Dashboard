@@ -1,5 +1,6 @@
 import fs from 'fs'
 import get_full_path from '../files.js'
+import Movie from '../movie.js'
 import TmdbWrapper from './tmdb.js'
 import Trakt from 'trakt.tv'
 
@@ -7,6 +8,7 @@ class TraktWrapper {
     constructor(info_file, io) {
 
         this.io = io
+        this.movies = new Map()
 
         fs.readFile(info_file, 'utf8', (err, jsonString) => {
             if (err) {
@@ -31,6 +33,9 @@ class TraktWrapper {
         };
         this.trakt = new Trakt(options);
         this.tmdb = new TmdbWrapper(get_full_path("/tmdb_info.json"))
+
+        // Load initial watch history
+        this.get_watch_history(null)
     }
 
     async get_now_playing(client) {
@@ -80,34 +85,43 @@ class TraktWrapper {
                     return new Date(b.last_watched_at) - new Date(a.last_watched_at)
                 })
 
-                this.get_movie_data(watch_history.data).then(movies => {
-                    client.emit("watch_history", movies)
+                this.get_movie_data(watch_history.data).then(new_movie_added => {
+                    if (new_movie_added && client) {
+                        client.emit("watch_history", Array.from(this.movies.values()))
+                    }
                 })
             }
         })
     }
 
     async get_movie_data(watch_history) {
-        let movies = []
+        let new_movie_added = false
+
         for (var i = 0; i < watch_history.length; i++) {
             let movie = watch_history[i]
-            let poster = ""
-            let tmdb_id = movie.movie.ids.tmdb
-            let link = `https://www.themoviedb.org/movie/${tmdb_id}-${movie.movie.ids.slug}`
-            /* 
-             * Small Axe is listed as a movie in Trakt and has a valid TMDB movie id but, the TMDB movie page 
-             * associated with this id is empty. There is a TMDB page for Small Axe under TV with a different 
-             * id. This page contains the real data for this movie... sorry
-             */
-            if (movie.movie.title == "Small Axe")
-                poster = await this.tmdb.get_show_poster(90705)
-            else
-                poster = await this.tmdb.get_movie_poster(tmdb_id)
+            let trakt_id = movie.movie.ids.trakt
 
-            movies.push({ name: movie.movie.title, poster: poster, link: link })
+            if (!this.movies.has(trakt_id)) {
+                new_movie_added = true
+                let poster = ""
+                let tmdb_id = movie.movie.ids.tmdb
+                let link = `https://www.themoviedb.org/movie/${tmdb_id}-${movie.movie.ids.slug}`
+
+                /* 
+                 * Small Axe is listed as a movie in Trakt and has a valid TMDB movie id but, the TMDB movie page 
+                 * associated with this id is empty. There is a TMDB page for Small Axe under TV with a different 
+                 * id. This page contains the real data for this movie... sorry
+                 */
+                if (movie.movie.title == "Small Axe")
+                    poster = await this.tmdb.get_show_poster(90705)
+                else
+                    poster = await this.tmdb.get_movie_poster(tmdb_id)
+
+                this.movies.set(trakt_id, new Movie(movie.movie.title, poster, link))
+            }
         }
 
-        return movies
+        return new_movie_added
     }
 }
 
