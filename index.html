@@ -79,6 +79,7 @@
             })
         })
         socket.on('watch_history', function(movies) {
+            console.log(movies)
             var watch_history = document.getElementById("watch-history")
 
             while (watch_history.hasChildNodes()) 
