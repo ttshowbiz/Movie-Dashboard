@@ -21,17 +21,17 @@ legend {
     font-size: 1em;
 }
 
-img {
+.poster {
     border-radius: 20px;
     border: solid 5px transparent;
     margin-left: 15px;
 }
 
-img:hover {
+.poster:hover {
     border: solid 5px #dad8d8;
 }
 
-.now-playing-info {
+#now-playing-info {
     padding: 5px 15px; /* top/bottom left/right */
 }
 
@@ -68,20 +68,6 @@ h6 {
     right: 10px;
 }
 
-.arrow {
-    border: solid white;
-    border-width: 0 5px 5px 0;
-    cursor: pointer;
-    padding: 10px;
-    position: fixed;
-}
-
-.right {
-    -webkit-transform: rotate(-45deg);
-    transform: rotate(-45deg);
-}
-
-.left {
-    -webkit-transform: rotate(135deg);
-    transform: rotate(135deg);
+#ratings_chart {
+    max-width: 500px;
 }

@@ -83,10 +83,11 @@ class TraktWrapper {
                 watch_history.data.sort(function (a, b) {
                     return new Date(b.last_watched_at) - new Date(a.last_watched_at)
 
-                this.get_movie_data(watch_history.data).then(new_movie_added => {
-                    if (client && (force_send || new_movie_added)) {
-                        client.emit("watch_history", Array.from(this.movies.values()))
-                    }
+                    this.get_movie_data(watch_history.data).then(new_movie_added => {
+                        if (client && (force_send || new_movie_added)) {
+                            client.emit("watch_history", Array.from(this.movies.values()))
+                        }
+                    })
                 })
             }
         })
@@ -138,7 +139,6 @@ class TraktWrapper {
         }
 
         return new_movie_added
-        })
     }
 }
 
