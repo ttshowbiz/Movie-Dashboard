@@ -4,6 +4,9 @@ import Movie from '../movie.js'
 import TmdbWrapper from './tmdb.js'
 import Trakt from 'trakt.tv'
 
+const SMALL_AXE_TRAKT_ID = 865887
+const SMALL_AXE_TMDB_ID = 90705
+
 class TraktWrapper {
     constructor(info_file, io) {
 
@@ -110,9 +113,7 @@ class TraktWrapper {
                  * associated with this id is empty. There is a TMDB page for Small Axe under TV with a different 
                  * id. This page contains the real data for this movie... sorry
                  */
-                const SMALL_AXE_TRAKT_ID = 865887
                 if (movie.movie.ids.trakt == SMALL_AXE_TRAKT_ID) {
-                    const SMALL_AXE_TMDB_ID = 90705
                     poster = await this.tmdb.get_show_poster(SMALL_AXE_TMDB_ID)
                 }
                 else {
@@ -138,6 +139,125 @@ class TraktWrapper {
 
             client.emit("ratings", ratings)
         })
+    }
+
+    async get_stats(client) {
+        let num_movies = 0;
+        let movie_time = ""
+        let oldest_movie = ""
+        let newest_movie = ""
+        let num_shows = 0;
+        let show_time = ""
+        let oldest_show = ""
+        let newest_show = ""
+
+        const YEAR_START = new Date(`${new Date().getFullYear() }-01-01T00:00:00.000Z`)
+
+        this.trakt.users.watched({ username: this.userId, type: "movies" }).then(async movies => {
+            let year_total = 0;
+            let time_in_minutes = 0;
+            let oldest
+            let newest
+            for (let i = 0; i < movies.data.length; i++) { 
+                let movie = movies.data[i]
+                if (new Date(movie.last_watched_at) > YEAR_START) {
+                    year_total++
+
+                    let movie_info = await this.tmdb.get_movie_info(movie.movie.ids.tmdb)
+                    time_in_minutes += movie_info.runtime
+                    let release_date = new Date(movie_info.release_data)
+                    if (!oldest || release_date < oldest) {
+                        oldest = release_date
+                        oldest_movie = `${movie.movie.title} (${oldest.getFullYear()})`
+                    } 
+                    if (!newest || release_date > newest) {
+                        newest = release_date
+                        newest_movie = `${movie.movie.title} (${newest.getFullYear()})`
+                    }
+                }
+            }
+
+            num_movies = year_total
+            movie_time = this.format_watch_time(time_in_minutes);
+            client.emit("stats", {
+                num_movies: num_movies,
+                movie_time: movie_time,
+                movie_oldest: oldest_movie,
+                movie_newest: newest_movie,
+                num_shows: num_shows,
+                show_time: show_time,
+                show_oldest: oldest_show,
+                show_newest: newest_show
+            })
+        })
+
+        this.trakt.users.watched({ username: this.userId, type: "shows" }).then(async shows => {
+            let oldest
+            let newest
+            let year_total = 0;
+            let time_in_minutes = 0;
+            for (let i = 0; i < shows.data.length; i++) {
+                let show = shows.data[i]
+                let show_date = await this.tmdb.get_show_date(show.show.ids.tmdb)
+                let release_date = new Date(show_date)
+                if (!oldest || release_date < oldest) {
+                    oldest = release_date
+                    oldest_show = `${show.show.title} (${oldest.getFullYear()})`
+                }
+                if (!newest || release_date > newest) {
+                    newest = release_date
+                    newest_show = `${show.show.title} (${newest.getFullYear()})`
+                }
+
+                for (let j = 0; j < show.seasons.length; j++) {
+                    let season = show.seasons[j]
+                    for (let k = 0; k < season.episodes.length; k++) {
+                        let episode = season.episodes[k]
+                        if (new Date(episode.last_watched_at) > YEAR_START) {
+                            year_total++
+
+                            let runtime = await this.tmdb.get_episode_runtime(show.show.ids.tmdb, season.number, episode.number)
+                            time_in_minutes += runtime
+                        }
+                    }
+                }
+            }
+
+            num_shows = year_total
+            show_time = this.format_watch_time(time_in_minutes);
+            client.emit("stats", {
+                num_movies: num_movies,
+                movie_time: movie_time,
+                movie_oldest: oldest_movie,
+                movie_newest: newest_movie,
+                num_shows: num_shows,
+                show_time: show_time,
+                show_oldest: oldest_show,
+                show_newest: newest_show
+            })
+        })
+    }
+
+    format_watch_time(time_in_minutes) {
+        const MINUTES_PER_DAY = 1440
+        const MINUTES_PER_HOUR = 60
+
+        let formatted_watch_time = ""
+        if (time_in_minutes > MINUTES_PER_DAY) {
+            let days_watched = Math.floor(time_in_minutes / MINUTES_PER_DAY)
+            formatted_watch_time += `${days_watched} Days `
+            time_in_minutes -= days_watched * MINUTES_PER_DAY
+        }
+        if (time_in_minutes > MINUTES_PER_HOUR) {
+            let hours_watched = Math.floor(time_in_minutes / MINUTES_PER_HOUR)
+            formatted_watch_time += `${hours_watched} Hours `
+            time_in_minutes -= hours_watched * MINUTES_PER_HOUR
+        }
+        if (time_in_minutes > 0) {
+            formatted_watch_time += `${time_in_minutes} Minutes`
+        }
+
+        return formatted_watch_time.trim()
     }
 }
 

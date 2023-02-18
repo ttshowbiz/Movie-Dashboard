@@ -1,3 +1,7 @@
+* {
+    box-sizing: border-box;
+}
+
 body {
     background-color: #14181c;
     color: #97a8b9;
@@ -19,20 +23,7 @@ legend {
     border-bottom: none;
     font-family: inherit;
     font-size: 1em;
-}
-
-.poster {
-    border-radius: 20px;
-    border: solid 5px transparent;
-    margin-left: 15px;
-}
-
-.poster:hover {
-    border: solid 5px #dad8d8;
-}
-
-#now-playing-info {
-    padding: 5px 15px; /* top/bottom left/right */
+    margin: 0;
 }
 
 h3 {
@@ -56,8 +47,59 @@ h6 {
     width: fit-content;
 }
 
+
+td {
+    text-align: center;
+}
+
+table {
+    width:100%;
+}
+
+.table-header {
+    text-align: center;
+}
+
+.table-label {
+    text-align: center;
+}
+
+.poster {
+    border-radius: 20px;
+    border: solid 5px transparent;
+}
+
+.poster:hover {
+    border: solid 5px #dad8d8;
+}
+
+.title {
+    text-align: center;
+}
+
 .child {
     float: left;
+    margin-left: 10px;
+}
+
+.table-label {
+    color: #ff8000;
+}
+
+.table-value {
+    text-align: left;
+}
+
+#left-arrow {
+    float: left;
+}
+
+#right-arrow {
+    float: right;
+}
+
+#now-playing-info {
+    padding: 5px 15px; /* top/bottom left/right */
 }
 
 #watch-history-previous {
@@ -70,4 +112,20 @@ h6 {
 
 #ratings_chart {
     max-width: 500px;
+    margin-top: 10px;
+}
+
+#top-row {
+    margin: auto;
+    width: 100%;
+}
+
+#top-row fieldset {
+    float: left;
+    width: 49%;
+    display: inline-block;
+}
+
+#second-row {
+    width: 100%;
 }

@@ -39,6 +39,7 @@ io.on('connection', function (client) {
         trakt.get_now_playing(client)
         trakt.get_watch_history(client, true)
         trakt.get_movie_ratings(client)
+        trakt.get_stats(client)
 
         setInterval(() => {
             trakt.get_now_playing(client)
@@ -47,6 +48,7 @@ io.on('connection', function (client) {
         setInterval(() => {
             trakt.get_watch_history(client)
             trakt.get_movie_ratings(client)
+            trakt.get_stats(client)
         }, 300000)
 
     });

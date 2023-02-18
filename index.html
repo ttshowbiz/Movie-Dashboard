@@ -52,7 +52,7 @@
               data: {
                 labels: xValues,
                 datasets: [{
-                  backgroundColor: "#ff8000",
+                  backgroundColor: ["#40bcf4", "#35c2d9", "#30c5cc", "#2bc8bf", "#25cbb1", "#20cea4", "#1bd197", "#15d489", "#10d77c", "#0bda6f", "#00e054"],
                   data: ratings
                 }]
               },
@@ -124,23 +124,72 @@
                     count++
                 })
             }
-        })        
+        })    
+        socket.on('stats', function(stats) {
+            document.getElementById("movies-watched").innerHTML=stats.num_movies
+            document.getElementById("movies-time").innerHTML=stats.movie_time
+            document.getElementById("movies-oldest").innerHTML=stats.movie_oldest
+            document.getElementById("movies-newest").innerHTML=stats.movie_newest
+
+            document.getElementById("shows-watched").innerHTML=stats.num_shows
+            document.getElementById("shows-time").innerHTML=stats.show_time
+            document.getElementById("shows-oldest").innerHTML=stats.show_oldest
+            document.getElementById("shows-newest").innerHTML=stats.show_newest
+        })
     </script>
     <div>
-        <fieldset>
-            <legend>Now Playing</legend>
-            <div>
-                <a id="now_playing_link" href="">
-                    <img class="child poster" id="now_playing_poster"></img>
-                </a>
-                <div id="now-playing-info" class="child">
-                    <h3 id="now_playing_title"> </h2>
-                    <h4 id="now_playing_subtitle"></h3>
-                    <div id="genre_container"></div>
+        <div id="top-row">
+            <fieldset>
+                <legend>Now Playing</legend>
+                <div>
+                    <a id="now_playing_link" href="">
+                        <img class="child poster" id="now_playing_poster"></img>
+                    </a>
+                    <div id="now-playing-info" class="child">
+                        <h3 id="now_playing_title"> </h2>
+                        <h4 id="now_playing_subtitle"></h3>
+                        <div id="genre_container"></div>
+                    </div>
                 </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Stats</legend>
+                    <div id="year-review">
+                        <h3 class="title"><script>document.write( new Date().getFullYear() );</script> in Review</h3>
+                        <table>
+                            <tr>
+                                <td class="table-header" colspan="2""><h4>Movies</h4></td>
+                                <td class="table-header" colspan="2"><h4>TV Shows</h4></td>
+                            </tr>
+                            <tr>
+                                <td class="table-label">Watched:</td>
+                                <td class="table-value" id="movies-watched"></td>
+                                <td class="table-label">Episodes Watched:</td>
+                                <td class="table-value" id="shows-watched"></td>
+                            </tr>
+                            <tr>
+                                <td class="table-label">Time Spent:</td>
+                                <td class="table-value" id="movies-time"></td>
+                                <td class="table-label">Time Spent:</td>
+                                <td class="table-value" id="shows-time"></td>
+                            </tr>
+                            <tr>
+                                <td class="table-label">Oldest:</td>
+                                <td class="table-value" id="movies-oldest"></td>
+                                <td class="table-label">Oldest:</td>
+                                <td class="table-value" id="shows-oldest"></td>
+                            </tr>
+                            <tr>
+                                <td class="table-label">Newest:</td>
+                                <td class="table-value" id="movies-newest"></td>
+                                <td class="table-label">Newest:</td>
+                                <td class="table-value" id="shows-newest"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </fieldset>
             </div>
-         </fieldset>
-         <fieldset>
+         <fieldset id="second-row">
             <legend>Watch History</legend>
             <div class="container">
                 <div class="row">
@@ -152,18 +201,18 @@
                 </div>
                 <div id="button-row" class="row">
                     <div class="col-12">
-                        <a id="watch-history-previous" class="col-1 mb3 float-left" title="watch history previous" href="#carouselExampleIndicators2" role="button" data-slide="prev">
-                            <img src="/assets/arrow-left.png" title="Previous"></img>
+                        <a id="watch-history-previous" class="col-1 mb3" title="watch history previous" href="#carouselExampleIndicators2" role="button" data-slide="prev">
+                            <img id="left-arrow" src="/assets/arrow-left.png" title="Previous"></img>
                         </a>
                         <a id="watch-history-next" class="col-1 mb3 float-right" title="watch history next" href="#carouselExampleIndicators2" role="button" data-slide="next">
-                            <img src="/assets/arrow-right.png" title="Next"></img>
+                            <img id="right-arrow" src="/assets/arrow-right.png" title="Next"></img>
                         </a>
                     </div>
                 </div>
             </div>
         </fieldset>
         <fieldset>
-            <legend>Ratings</legend>
+            <legend>Movie Ratings</legend>
             <canvas id="ratings_chart"></canvas>
         </fieldset>
     </div>
