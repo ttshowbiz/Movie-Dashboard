@@ -52,7 +52,7 @@
               data: {
                 labels: xValues,
                 datasets: [{
-                  backgroundColor: "#ff8000",
+                  backgroundColor: ["#40bcf4", "#35c2d9", "#30c5cc", "#2bc8bf", "#25cbb1", "#20cea4", "#1bd197", "#15d489", "#10d77c", "#0bda6f", "#00e054"],
                   data: ratings
                 }]
               },
@@ -124,23 +124,56 @@
                     count++
                 })
             }
-        })        
+        })    
+        socket.on('stats', function(stats) {
+            document.getElementById("movies-watched").innerHTML=stats.num_movies
+            document.getElementById("movies-time").innerHTML=stats.movie_time
+
+            document.getElementById("shows-watched").innerHTML=stats.num_shows
+            document.getElementById("shows-time").innerHTML=stats.show_time
+        })
     </script>
     <div>
-        <fieldset>
-            <legend>Now Playing</legend>
-            <div>
-                <a id="now_playing_link" href="">
-                    <img class="child poster" id="now_playing_poster"></img>
-                </a>
-                <div id="now-playing-info" class="child">
-                    <h3 id="now_playing_title"> </h2>
-                    <h4 id="now_playing_subtitle"></h3>
-                    <div id="genre_container"></div>
+        <div id="top-row">
+            <fieldset>
+                <legend>Now Playing</legend>
+                <div>
+                    <a id="now_playing_link" href="">
+                        <img class="child poster" id="now_playing_poster"></img>
+                    </a>
+                    <div id="now-playing-info" class="child">
+                        <h3 id="now_playing_title"> </h2>
+                        <h4 id="now_playing_subtitle"></h3>
+                        <div id="genre_container"></div>
+                    </div>
                 </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Stats</legend>
+                    <div id="year-review">
+                        <h3 class="title"><script>document.write( new Date().getFullYear() );</script> in Review</h3>
+                        <table>
+                            <tr>
+                                <td class="table-header" colspan="2""><h4>Movies</h4></td>
+                                <td class="table-header" colspan="2"><h4>TV Shows</h4></td>
+                            </tr>
+                            <tr>
+                                <td class="table-label">Watched:</td>
+                                <td class="table-value" id="movies-watched"></td>
+                                <td class="table-label">Episodes Watched:</td>
+                                <td class="table-value" id="shows-watched"></td>
+                            </tr>
+                            <tr>
+                                <td class="table-label">Time Spent:</td>
+                                <td class="table-value" id="movies-time"></td>
+                                <td class="table-label">Time Spent:</td>
+                                <td class="table-value" id="shows-time"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </fieldset>
             </div>
-         </fieldset>
-         <fieldset>
+         <fieldset id="second-row">
             <legend>Watch History</legend>
             <div class="container">
                 <div class="row">
@@ -163,7 +196,7 @@
             </div>
         </fieldset>
         <fieldset>
-            <legend>Ratings</legend>
+            <legend>Movie Ratings</legend>
             <canvas id="ratings_chart"></canvas>
         </fieldset>
     </div>

@@ -37,6 +37,22 @@ class TmdbWrapper {
         return this.base_url + this.poster_size + result.posters[0].file_path
     }
 
+    async get_movie_runtime(id) {
+        let result = await this.tmdb.movieInfo({ id: id })
+        return result.runtime;
+    }
+
+    async get_episode_runtime(id, season = -1, episode = -1) {
+        let result
+
+        if (episode > -1 && season > -1)
+            result = await this.tmdb.episodeInfo({ id: id, season_number: season, episode_number: episode })
+        else
+            result = await this.tmdb.showInfo({ id: id })
+
+        return result.runtime;
+    }
+
     async get_movie_genres(id) {
         let genres = []
         let result = await this.tmdb.movieInfo({ id: id })
