@@ -67,7 +67,6 @@ table {
 .poster {
     border-radius: 20px;
     border: solid 5px transparent;
-    margin-left: 15px;
 }
 
 .poster:hover {
@@ -80,6 +79,7 @@ table {
 
 .child {
     float: left;
+    margin-left: 10px;
 }
 
 .table-label {
@@ -88,6 +88,14 @@ table {
 
 .table-value {
     text-align: left;
+}
+
+#left-arrow {
+    float: left;
+}
+
+#right-arrow {
+    float: right;
 }
 
 #now-playing-info {
@@ -104,6 +112,7 @@ table {
 
 #ratings_chart {
     max-width: 500px;
+    margin-top: 10px;
 }
 
 #top-row {

@@ -37,9 +37,9 @@ class TmdbWrapper {
         return this.base_url + this.poster_size + result.posters[0].file_path
     }
 
-    async get_movie_runtime(id) {
+    async get_movie_info(id) {
         let result = await this.tmdb.movieInfo({ id: id })
-        return result.runtime;
+        return { runtime: result.runtime, release_data: result.release_date };
     }
 
     async get_episode_runtime(id, season = -1, episode = -1) {
@@ -51,6 +51,11 @@ class TmdbWrapper {
             result = await this.tmdb.showInfo({ id: id })
 
         return result.runtime;
+    }
+
+    async get_show_date(id) {
+        let result = await this.tmdb.tvInfo({ id: id })
+        return result.first_air_date;
     }
 
     async get_movie_genres(id) {

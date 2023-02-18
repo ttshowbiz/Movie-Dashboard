@@ -128,9 +128,13 @@
         socket.on('stats', function(stats) {
             document.getElementById("movies-watched").innerHTML=stats.num_movies
             document.getElementById("movies-time").innerHTML=stats.movie_time
+            document.getElementById("movies-oldest").innerHTML=stats.movie_oldest
+            document.getElementById("movies-newest").innerHTML=stats.movie_newest
 
             document.getElementById("shows-watched").innerHTML=stats.num_shows
             document.getElementById("shows-time").innerHTML=stats.show_time
+            document.getElementById("shows-oldest").innerHTML=stats.show_oldest
+            document.getElementById("shows-newest").innerHTML=stats.show_newest
         })
     </script>
     <div>
@@ -169,6 +173,18 @@
                                 <td class="table-label">Time Spent:</td>
                                 <td class="table-value" id="shows-time"></td>
                             </tr>
+                            <tr>
+                                <td class="table-label">Oldest:</td>
+                                <td class="table-value" id="movies-oldest"></td>
+                                <td class="table-label">Oldest:</td>
+                                <td class="table-value" id="shows-oldest"></td>
+                            </tr>
+                            <tr>
+                                <td class="table-label">Newest:</td>
+                                <td class="table-value" id="movies-newest"></td>
+                                <td class="table-label">Newest:</td>
+                                <td class="table-value" id="shows-newest"></td>
+                            </tr>
                         </table>
                     </div>
                 </fieldset>
@@ -185,11 +201,11 @@
                 </div>
                 <div id="button-row" class="row">
                     <div class="col-12">
-                        <a id="watch-history-previous" class="col-1 mb3 float-left" title="watch history previous" href="#carouselExampleIndicators2" role="button" data-slide="prev">
-                            <img src="/assets/arrow-left.png" title="Previous"></img>
+                        <a id="watch-history-previous" class="col-1 mb3" title="watch history previous" href="#carouselExampleIndicators2" role="button" data-slide="prev">
+                            <img id="left-arrow" src="/assets/arrow-left.png" title="Previous"></img>
                         </a>
                         <a id="watch-history-next" class="col-1 mb3 float-right" title="watch history next" href="#carouselExampleIndicators2" role="button" data-slide="next">
-                            <img src="/assets/arrow-right.png" title="Next"></img>
+                            <img id="right-arrow" src="/assets/arrow-right.png" title="Next"></img>
                         </a>
                     </div>
                 </div>
