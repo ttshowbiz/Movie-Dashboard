@@ -78,8 +78,8 @@
             })
         })
         socket.on('watch_history', function(movies) {
-            console.log(movies)
             var watch_history = document.getElementById("watch-history")
+            const row_size = Math.floor(watch_history.clientWidth / 200)
 
             while (watch_history.hasChildNodes()) 
                 watch_history.removeChild(watch_history.firstChild);
@@ -91,7 +91,7 @@
                 let inner_row
                 
                 movies.forEach(function(movie){
-                    if(count % 5 == 0) {
+                    if(count % row_size == 0) {
                         carousel_row = document.createElement("div")
                         carousel_row.classList.add("carousel-item")
                         if(count == 0)

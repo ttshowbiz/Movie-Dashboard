@@ -15,10 +15,16 @@ class TmdbWrapper {
     }
 
     init(api_key) {
+        this.poster_size = 'w154'
+        this.base_url = 'http://image.tmdb.org/t/p/'
         this.tmdb = new MovieDb(api_key)
+
         this.tmdb.configuration({}).then((res) => {
             this.base_url = res.images.base_url
-            this.poster_size = 'w154'
+        }).catch(error => {
+            console.group(`Failed to get base URL from TMDB using default`)
+            console.log(error)
+            console.groupEnd()
         })
     }
 
