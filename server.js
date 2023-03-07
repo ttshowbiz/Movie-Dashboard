@@ -29,7 +29,7 @@ server.listen(3000, () => {
 })
 
 
-const trakt = new TraktWrapper(get_full_path('/trakt_info.json'), io)
+const trakt = new TraktWrapper(get_full_path('/trakt_info.json'))
 
 io.on('connection', function (client) {
     console.log('Client connected...');

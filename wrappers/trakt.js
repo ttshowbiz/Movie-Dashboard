@@ -8,9 +8,16 @@ const SMALL_AXE_TRAKT_ID = 865887
 const SMALL_AXE_TMDB_ID = 90705
 
 class TraktWrapper {
-    constructor(info_file, io) {
+    /**
+     * Constructs a TraktWrapper object from the Trakt user id, client id, 
+     * and client secret provided in the info_file.
+     * 
+     * @constructs TraktWrapper
+     * 
+     * @param {string} info_file Path to a json file containing user_id, client_id, and client_secret elements.
+     */
+    constructor(info_file) {
 
-        this.io = io
         this.movies = new Map()
 
         fs.readFile(info_file, 'utf8', (err, jsonString) => {
@@ -25,6 +32,12 @@ class TraktWrapper {
         })
     }
 
+    /**
+     * Initializes the Trakt object used to make api calls to Trakt.
+     * 
+     * @param {string} client_id     Trakt API client id
+     * @param {string} client_secret Trakt API client secret
+     */
     init(client_id, client_secret) {
         let options = {
             client_id: client_id,
@@ -41,6 +54,11 @@ class TraktWrapper {
         this.get_watch_history(null)
     }
 
+    /**
+     * Gets the currently playing movie or tv episode from Trakt.
+     * 
+     * @param {any} client client object to send the now playing info.
+     */
     async get_now_playing(client) {
         let title = "Nothing Currently Playing"
         let subtitle = ""
@@ -75,10 +93,20 @@ class TraktWrapper {
             }
 
             client.emit('now_playing_info', {title: title, subtitle: subtitle, poster: poster, genres: genres, link: link})
+        }).catch(error => {
+            console.group(`Failed to retrieve now playing for ${this.userId}`)
+            console.log(error)
+            console.groupEnd()
         })
     }
 
-    // NOTE: Movies only
+    /**
+     * Gets movie watch history from Trakt. Only sends the history to the client 
+     * if new movies were found unless force_send is set to true.
+     * 
+     * @param {any} client     Client object to send watch history to.
+     * @param {boolean} force_send When true the watch history will always be sent to the client.
+     */
     async get_watch_history(client, force_send = false) {
         this.trakt.users.watched({ username: this.userId, type: "movies" }).then(async watch_history => {
             if (watch_history.data) {
@@ -92,9 +120,19 @@ class TraktWrapper {
                     }
                 })
             }
+        }).catch(error => {
+            console.group("Failed to get watch history")
+            console.log(error)
+            console.groupEnd()
         })
     }
 
+    /**
+     * Gets the poster and the web link for a list of movies provided by Trakt.
+     * 
+     * @param {JSON} watch_history Trakt watch history data
+     * @returns If a new movie is added to this.movies true, otherwise false.
+     */
     async get_movie_data(watch_history) {
         let new_movie_added = false
 
@@ -114,10 +152,19 @@ class TraktWrapper {
                  * id. This page contains the real data for this movie... sorry
                  */
                 if (movie.movie.ids.trakt == SMALL_AXE_TRAKT_ID) {
-                    poster = await this.tmdb.get_show_poster(SMALL_AXE_TMDB_ID)
+                    const SMALL_AXE_TMDB_ID = 90705
+                    poster = await this.tmdb.get_show_poster(SMALL_AXE_TMDB_ID).catch(error => {
+                        console.group(`Failed to get poster for ${movie.movie.title} (id: ${movie.movie.ids.trakt})`)
+                        console.log(error)
+                        console.groupEnd()
+                    })
                 }
                 else {
-                    poster = await this.tmdb.get_movie_poster(tmdb_id)
+                    poster = await this.tmdb.get_movie_poster(tmdb_id).catch(error => {
+                        console.group(`Failed to get poster for ${movie.movie.title} (id: ${movie.movie.ids.trakt})`)
+                        console.log(error)
+                        console.groupEnd()
+                    })
                 }
                         
                 this.movies.set(trakt_id, new Movie(movie.movie.title, poster, link))
@@ -127,6 +174,12 @@ class TraktWrapper {
         return new_movie_added
     }
 
+    /**
+     * Sends an array to the client containing the count of movies different ratings.
+     * (e.g. if there were 5 movies, rated 7, 7, 1, 10, and 5 [0, 1, 0, 0, 0, 1, 0, 2, 0, 0, 1] would be returned)
+     * 
+     * @param {any} client client to return the ratings to.
+     */
     async get_movie_ratings(client) {
         let ratings = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         this.trakt.users.ratings({ username: this.userId, type: "movies" }).then(rating_info => {
@@ -138,6 +191,10 @@ class TraktWrapper {
             })
 
             client.emit("ratings", ratings)
+        }).catch(error => {
+            console.group("Failed to get movie ratings from Trakt")
+            console.log(error)
+            console.groupEnd()
         })
     }
 
